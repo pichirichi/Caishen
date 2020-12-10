@@ -594,7 +594,7 @@ open class CardTextField: UITextField, NumberInputTextFieldDelegate {
     }
 
     open override func becomeFirstResponder() -> Bool {
-        // Return false if any of this text field's subviews is already first responder. 
+        // Return false if any of this text field's subviews is already first responder.
         // Otherwise let `numberInputTextField` become the first responder.
         if [numberInputTextField,monthTextField,yearTextField,cvcTextField]
             .map({return $0.isFirstResponder})

@@ -84,8 +84,10 @@ extension CardTextField {
             numberInputTextField?.alpha = 0
         }
         // Reset the first responder status as it was before.
-        UIView.performWithoutAnimation { [weak self] in
-            self?.numberInputTextField?.resignFirstResponder()
+        if !UIAccessibility.isVoiceOverRunning {
+            UIView.performWithoutAnimation { [weak self] in
+                self?.numberInputTextField?.resignFirstResponder()
+            }
         }
         if shouldMoveAnimated {
             cardInfoView?.transform = CGAffineTransform.identity
