@@ -105,7 +105,6 @@ open class StylizedTextField: UITextField, UITextFieldDelegate {
     open override func accessibilityElementDidBecomeFocused() {
         super.accessibilityElementDidBecomeFocused()
         didFocusAccessibility?(self)
-        becomeFirstResponder()
     }
     
     open override func draw(_ rect: CGRect) {

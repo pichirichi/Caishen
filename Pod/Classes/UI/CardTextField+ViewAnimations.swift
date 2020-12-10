@@ -54,8 +54,10 @@ extension CardTextField {
         if let transform = cardInfoView?.transform, transform.isIdentity {
             shouldMoveAnimated = false
         }
-        UIView.performWithoutAnimation { [weak self] in
-            self?.numberInputTextField?.becomeFirstResponder()
+        if !UIAccessibility.isVoiceOverRunning {
+            UIView.performWithoutAnimation { [weak self] in
+                self?.numberInputTextField?.becomeFirstResponder()
+            }
         }
         // Get the rect for the last group of digits
         if let rect = numberInputTextField?.rectForLastGroup() {
@@ -92,7 +94,7 @@ extension CardTextField {
                 self?.cardInfoView?.transform = CGAffineTransform.identity
             }
         }
-        if remainFirstResponder {
+        if remainFirstResponder && !UIAccessibility.isVoiceOverRunning {
             monthTextField.becomeFirstResponder()
         }
     }
@@ -116,13 +118,17 @@ extension CardTextField {
             // or half way through the view animation (right to left script)
             let firstResponderDelay = isRightToLeftLanguage ? viewAnimationDuration / 2.0 : viewAnimationDuration
             DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(firstResponderDelay * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: {
-                            infoTextFields.forEach({$0?.resignFirstResponder()})
-                            self.numberInputTextField.becomeFirstResponder()
+                if !UIAccessibility.isVoiceOverRunning {
+                    infoTextFields.forEach({$0?.resignFirstResponder()})
+                    self.numberInputTextField.becomeFirstResponder()
+                }
             })
         } else {
             numberInputTextField?.layer.mask = nil
-            infoTextFields.forEach({$0?.resignFirstResponder()})
-            numberInputTextField.becomeFirstResponder()
+            if !UIAccessibility.isVoiceOverRunning {
+                infoTextFields.forEach({$0?.resignFirstResponder()})
+                numberInputTextField.becomeFirstResponder()
+            }
         }
     }
     
