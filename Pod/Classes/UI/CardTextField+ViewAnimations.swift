@@ -17,7 +17,7 @@ extension CardTextField {
      - Parameters:
         - remainFirstResponder: Indicates whether the text field should remain first responder after finishing the animation.
      */
-    @objc open func moveCardNumberOutAnimated(remainFirstResponder: Bool = true) {
+    @objc open func moveCardNumberOutAnimated(remainFirstResponder: Bool) {
         UIView.animate(withDuration: viewAnimationDuration, animations: { [weak self] in
             self?.moveCardNumberOut(remainFirstResponder: remainFirstResponder)
             })
@@ -38,7 +38,7 @@ extension CardTextField {
      - Parameters:
         - remainFirstResponder: Indicates whether the text field should remain first responder after finishing the animation.
      */
-    @objc open func moveCardNumberOut(remainFirstResponder: Bool = true) {
+    @objc open func moveCardNumberOut(remainFirstResponder: Bool) {
         // If the card number is invalid, do not allow to move to the card detail
         if cardType?.validate(number: card.bankCardNumber) != .Valid && !UIAccessibility.isVoiceOverRunning {
             return
@@ -52,6 +52,9 @@ extension CardTextField {
         // In order to tackle these animation issues, check if the cardInfoView was previously fully displayed (and should therefor not be moved with an animation).
         var shouldMoveAnimated: Bool = true
         if let transform = cardInfoView?.transform, transform.isIdentity {
+            shouldMoveAnimated = false
+        }
+        if UIAccessibility.isVoiceOverRunning {
             shouldMoveAnimated = false
         }
         if !UIAccessibility.isVoiceOverRunning {
@@ -96,8 +99,8 @@ extension CardTextField {
                 self?.cardInfoView?.transform = CGAffineTransform.identity
             }
         }
-        if remainFirstResponder && !UIAccessibility.isVoiceOverRunning {
-            monthTextField.becomeFirstResponder()
+        if remainFirstResponder {
+            monthTextField.becomeFirstResponderWithAccessibilityAnnounce()
         }
     }
     

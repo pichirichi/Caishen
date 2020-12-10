@@ -14,7 +14,7 @@ extension CardTextField: CardInfoTextFieldDelegate {
         updateNumberColor()
         notifyDelegate()
         if expirationDateIsValid() {
-            select(textField, prefillText: nil)
+            select(textField as? StylizedTextField, prefillText: nil)
         }
     }
     
@@ -25,11 +25,11 @@ extension CardTextField: CardInfoTextFieldDelegate {
     
     open func textField(_ textField: UITextField, didEnterOverflowInfo overFlowDigits: String) {
         updateNumberColor()
-        select(textField, prefillText: overFlowDigits)
+        select(textField as? StylizedTextField, prefillText: overFlowDigits)
     }
 
-    private func select(_ textField: UITextField, prefillText: String?) {
-        var nextTextField: UITextField?
+    private func select(_ textField: StylizedTextField?, prefillText: String?) {
+        var nextTextField: StylizedTextField?
         if textField == monthTextField {
             if hideExpiryTextFields {
                 select(yearTextField, prefillText: prefillText)
@@ -45,7 +45,7 @@ extension CardTextField: CardInfoTextFieldDelegate {
         // Let the next text field become first responder if one of the contained text fields
         // already is first responder.
         if isFirstResponder {
-            nextTextField?.becomeFirstResponder()
+            nextTextField?.becomeFirstResponderWithAccessibilityAnnounce()
         }
 
         guard let prefillText = prefillText else {

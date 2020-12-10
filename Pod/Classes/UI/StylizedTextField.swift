@@ -101,6 +101,11 @@ open class StylizedTextField: UITextField, UITextFieldDelegate {
         return super.becomeFirstResponder()
     }
 
+    open func becomeFirstResponderWithAccessibilityAnnounce() {
+        UIAccessibility.post(notification: .screenChanged, argument: self)
+        self.becomeFirstResponder()
+    }
+
     open override func accessibilityElementDidBecomeFocused() {
         super.accessibilityElementDidBecomeFocused()
         didFocusAccessibility?(self)

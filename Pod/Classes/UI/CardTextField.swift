@@ -522,13 +522,8 @@ open class CardTextField: UITextField, NumberInputTextFieldDelegate {
     }
     
     open func numberInputTextFieldDidComplete(_ numberInputTextField: NumberInputTextField) {
-        if !UIAccessibility.isVoiceOverRunning {
-            // Retain the first responder status if currently first responder.
-            moveCardNumberOutAnimated(remainFirstResponder: isFirstResponder)
-        } else {
-            // Responder status handled by VoiceOver
-            moveCardNumberOutAnimated(remainFirstResponder: false)
-        }
+        // Retain the first responder status if currently first responder.
+        moveCardNumberOutAnimated(remainFirstResponder: isFirstResponder)
         notifyDelegate()
         hideExpiryTextFields = !cardTypeRegister.cardType(for: numberInputTextField.cardNumber).requiresExpiry
         hideCVCTextField = !cardTypeRegister.cardType(for: numberInputTextField.cardNumber).requiresCVC
