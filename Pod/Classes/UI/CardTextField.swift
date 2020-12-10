@@ -317,6 +317,7 @@ open class CardTextField: UITextField, NumberInputTextFieldDelegate {
         setupTargetsForEditingBegin()
         setupAccessoryButton()
         setupAccessibilityLabels()
+        setupAccessibilityOrder()
     }
     
     private func setupTextFieldDelegates() {
@@ -393,6 +394,11 @@ open class CardTextField: UITextField, NumberInputTextFieldDelegate {
     private func setupAccessibilityLabel(for textField: UITextField) {
         textField.accessibilityLabel = Localization.accessibilityLabel(for: textField,
                                                                        with: "Accessibility label for \(String(describing: textField))")
+    }
+
+    private func setupAccessibilityOrder() {
+        isAccessibilityElement = false
+        accessibilityElements = [ numberInputTextField, monthTextField, yearTextField, cvcTextField, accessoryButton ]
     }
     
     /**
@@ -566,44 +572,7 @@ open class CardTextField: UITextField, NumberInputTextFieldDelegate {
             }
         })
     }
-    
-    // MARK: Accessibility
-    
-    /**
-     There are 5 elements that enables accessibility in a CardTextField.
-     They are numberInputTextField, monthTextField, yearTextField, cvcTextField and accessoryButton.
-     They should be focused when user click on one of them when accessibility is on.
-     
-     - returns: total number accessibility elements in the container CardTextField
-     */
-    open override func accessibilityElementCount() -> Int {
-        return 5
-    }
 
-    /**
-     Returns the accessibility element at the specified index
-     
-     - parameter index: The index of the accessibility element
-     
-     - returns: The accessibility element at the specified index, or nil if none exists
-     */
-    open override func accessibilityElement(at index: Int) -> Any? {
-        switch index {
-        case 0:
-            return numberInputTextField
-        case 1:
-            return monthTextField
-        case 2:
-            return yearTextField
-        case 3:
-            return cvcTextField
-        case 4:
-            return accessoryButton
-        default:
-            return nil
-        }
-    }
-    
     open override func becomeFirstResponder() -> Bool {
         // Return false if any of this text field's subviews is already first responder. 
         // Otherwise let `numberInputTextField` become the first responder.
