@@ -351,6 +351,17 @@ open class CardTextField: UITextField, NumberInputTextFieldDelegate {
                 self?.monthTextField?.becomeFirstResponder()
             }
         }
+
+        // setup accessibility focus
+        numberInputTextField.didFocusAccessibility = { [weak self] _ in
+            self?.moveCardNumberIn()
+        }
+
+        [cvcTextField, monthTextField, yearTextField].forEach { textField in
+            textField.didFocusAccessibility = { [weak self] _ in
+                self?.moveCardNumberOut(remainFirstResponder: false)
+            }
+        }
         
         // Set the text alignment of cvc and month text field manually, as there is no
         // counterpart to `right` (in a left-to-right script) that changes based on localization
@@ -511,12 +522,21 @@ open class CardTextField: UITextField, NumberInputTextFieldDelegate {
     }
     
     open func numberInputTextFieldDidComplete(_ numberInputTextField: NumberInputTextField) {
-        // Retain the first responder status if currently first responder.
-        moveCardNumberOutAnimated(remainFirstResponder: isFirstResponder)
-        
+        if !UIAccessibility.isVoiceOverRunning {
+            // Retain the first responder status if currently first responder.
+            moveCardNumberOutAnimated(remainFirstResponder: isFirstResponder)
+        } else {
+            // Responder status handled by VoiceOver
+            moveCardNumberOutAnimated(remainFirstResponder: false)
+        }
         notifyDelegate()
         hideExpiryTextFields = !cardTypeRegister.cardType(for: numberInputTextField.cardNumber).requiresExpiry
         hideCVCTextField = !cardTypeRegister.cardType(for: numberInputTextField.cardNumber).requiresCVC
+
+        if UIAccessibility.isVoiceOverRunning {
+            return
+        }
+
         if hideExpiryTextFields && hideCVCTextField || !isFirstResponder {
             return
         } else if hideExpiryTextFields {

@@ -40,7 +40,7 @@ extension CardTextField {
      */
     @objc open func moveCardNumberOut(remainFirstResponder: Bool = true) {
         // If the card number is invalid, do not allow to move to the card detail
-        if cardType?.validate(number: card.bankCardNumber) != .Valid {
+        if cardType?.validate(number: card.bankCardNumber) != .Valid && !UIAccessibility.isVoiceOverRunning {
             return
         }
         // If neither expiry nor cvc are required, also do not allow to move to the detail

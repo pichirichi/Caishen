@@ -54,7 +54,12 @@ open class StylizedTextField: UITextField, UITextFieldDelegate {
      A method which will be called, when the delete key has been pressed for an empty text field.
      */
     open var deleteBackwardCallback: ((UITextField) -> Void)?
-    
+
+    /**
+     A method which will be called, when the text field becomes responder.
+     */
+    open var didFocusAccessibility: ((UITextField) -> Void)?
+
     open override var text: String? {
         didSet {
             if (text ?? "").isEmpty {
@@ -95,6 +100,12 @@ open class StylizedTextField: UITextField, UITextFieldDelegate {
     override open func becomeFirstResponder() -> Bool {
         UIAccessibility.post(notification: UIAccessibility.Notification.screenChanged, argument: self)
         return super.becomeFirstResponder()
+    }
+
+    open override func accessibilityElementDidBecomeFocused() {
+        super.accessibilityElementDidBecomeFocused()
+        didFocusAccessibility?(self)
+        becomeFirstResponder()
     }
     
     open override func draw(_ rect: CGRect) {
