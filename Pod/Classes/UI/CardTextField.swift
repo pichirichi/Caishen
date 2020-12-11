@@ -61,6 +61,8 @@ open class CardTextField: UITextField, NumberInputTextFieldDelegate {
      */
     @IBOutlet open weak var cardInfoView: UIView?
 
+    @IBOutlet open weak var mainStack: UIStackView?
+
     /// The image store for the card number text field.
     open var cardTypeImageStore: CardTypeImageStore = Bundle(for: CardTextField.self)
 
@@ -318,6 +320,8 @@ open class CardTextField: UITextField, NumberInputTextFieldDelegate {
         setupAccessoryButton()
         setupAccessibilityLabels()
         setupAccessibilityOrder()
+
+
     }
     
     private func setupTextFieldDelegates() {
@@ -407,9 +411,11 @@ open class CardTextField: UITextField, NumberInputTextFieldDelegate {
                                                                        with: "Accessibility label for \(String(describing: textField))")
     }
 
+    @objc
     private func setupAccessibilityOrder() {
         isAccessibilityElement = false
         accessibilityElements = [ numberInputTextField, monthTextField, yearTextField, cvcTextField, accessoryButton ]
+        mainStack?.axis = UIAccessibility.isVoiceOverRunning ? .vertical : .horizontal
     }
     
     /**
@@ -463,13 +469,6 @@ open class CardTextField: UITextField, NumberInputTextFieldDelegate {
     
     open override func willMove(toSuperview newSuperview: UIView?) {
         super.willMove(toSuperview: newSuperview)
-        if let secondaryView = cardInfoView {
-            if secondaryView.superview != superview {
-                superview?.addSubview(secondaryView)
-            }
-        }
-        
-        cardInfoView?.frame = bounds
     }
     
     open override func didMoveToSuperview() {

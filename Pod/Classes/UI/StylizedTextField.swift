@@ -62,7 +62,7 @@ open class StylizedTextField: UITextField, UITextFieldDelegate {
 
     open override var text: String? {
         didSet {
-            if (text ?? "").isEmpty {
+            if (text ?? "").isEmpty && !UIAccessibility.isVoiceOverRunning {
                 deleteBackwardCallback?(self)
             } else if text == UITextField.emptyTextFieldCharacter {
                 drawPlaceholder(in: textInputView.bounds)
@@ -101,8 +101,10 @@ open class StylizedTextField: UITextField, UITextFieldDelegate {
         return super.becomeFirstResponder()
     }
 
-    open func becomeFirstResponderWithAccessibilityAnnounce() {
-        UIAccessibility.post(notification: .screenChanged, argument: self)
+    open func becomeFirstResponderIfNotVoiceOver() {
+        if UIAccessibility.isVoiceOverRunning {
+            return
+        }
         self.becomeFirstResponder()
     }
 

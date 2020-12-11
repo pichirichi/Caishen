@@ -39,6 +39,10 @@ extension CardTextField {
         - remainFirstResponder: Indicates whether the text field should remain first responder after finishing the animation.
      */
     @objc open func moveCardNumberOut(remainFirstResponder: Bool) {
+        if UIAccessibility.isVoiceOverRunning {
+            return
+        }
+
         // If the card number is invalid, do not allow to move to the card detail
         if cardType?.validate(number: card.bankCardNumber) != .Valid && !UIAccessibility.isVoiceOverRunning {
             return
@@ -100,7 +104,7 @@ extension CardTextField {
             }
         }
         if remainFirstResponder {
-            monthTextField.becomeFirstResponderWithAccessibilityAnnounce()
+            monthTextField.becomeFirstResponderIfNotVoiceOver()
         }
     }
     
@@ -108,6 +112,10 @@ extension CardTextField {
      Moves the full card number input field to inside the screen. At the same time, the card detail (expiration month and year and CVC) are moved outside the view.
      */
     @objc open func moveCardNumberIn() {
+        if UIAccessibility.isVoiceOverRunning {
+            return
+        }
+
         let infoTextFields: [UITextField?] = [monthTextField, yearTextField, cvcTextField]
         
         translateCardNumberIn()
@@ -138,6 +146,9 @@ extension CardTextField {
     }
     
     open func translateCardNumberIn() {
+        if UIAccessibility.isVoiceOverRunning {
+            return
+        }
         if isRightToLeftLanguage {
             UIView.performWithoutAnimation {
                 self.numberInputTextField?.alpha = 1
