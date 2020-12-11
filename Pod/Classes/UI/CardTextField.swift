@@ -151,6 +151,8 @@ open class CardTextField: UITextField, NumberInputTextFieldDelegate {
             accessoryButtonTrailingConstraint?.constant = accessoryButtonTrailingInset
         }
     }
+
+    @IBOutlet var cardInfoLeadingConstraint: NSLayoutConstraint?
     
     /**
      The currently entered card values. Note that the values are not guaranteed to be valid.
@@ -416,6 +418,7 @@ open class CardTextField: UITextField, NumberInputTextFieldDelegate {
         isAccessibilityElement = false
         accessibilityElements = [ numberInputTextField, monthTextField, yearTextField, cvcTextField, accessoryButton ]
         mainStack?.axis = UIAccessibility.isVoiceOverRunning ? .vertical : .horizontal
+        cardInfoLeadingConstraint?.isActive = UIAccessibility.isVoiceOverRunning
     }
     
     /**
